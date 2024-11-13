@@ -63,9 +63,6 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 
-// camera.position.x = 0;
-// camera.position.y = 2;
-// camera.position.z = 5;
 camera.position.set(0, 2, 10)
 
 function animate() {
@@ -74,4 +71,13 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+}
+
+window.addEventListener('resize', onWindowResize);
 renderer.setAnimationLoop(animate);
