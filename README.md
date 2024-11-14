@@ -7,3 +7,5 @@ Usually:
     cd <subdir>
     npm install
     npm run dev
+
+Enjoy
