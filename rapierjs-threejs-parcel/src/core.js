@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 
 export class VisualEngineManager {
 
@@ -11,6 +12,7 @@ export class VisualEngineManager {
     camera;
     renderer;
     controls;
+    gui;
 
     constructor(rootElement) {
         this.rootElement = rootElement;
@@ -20,6 +22,7 @@ export class VisualEngineManager {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer();
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.gui = new GUI();
     }
 
     init() {
