@@ -1,0 +1,36 @@
+html,
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 24px;
+    color: #fff;
+}
+
+#info,
+#navigation {
+    position: absolute;
+    padding: 10px;
+    z-index: 100;
+}
+
+#navigation {
+    top: 100px;
+    left: 10px;
+    padding: 10px;
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+#info {
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+a {
+    color: cyan;
+}

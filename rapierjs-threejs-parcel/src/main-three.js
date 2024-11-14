@@ -14,8 +14,8 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 // const loader = new GLTFLoader();
 
-// const ambientLight = new THREE.AmbientLight(0xffffff); // soft white light
-// scene.add(ambientLight);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
+scene.add(ambientLight);
 
 // const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x080820, 1);
 // scene.add(hemisphereLight);
