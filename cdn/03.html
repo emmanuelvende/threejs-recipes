@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Hello Three.js (2d text)</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #topTitle {
+      position: absolute;
+      padding: 10px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      text-align: center;
+      width: 100%;
+      color: white;
+    }
+
+    #textInfo {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      background-color: rgba(128, 128, 128, 0.4);
+      color: white;
+      padding: 5px;
+    }
+
+    .label,
+    .bigLabel {
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+
+      padding: 2px;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .label {
+      font-size: 12px;
+    }
+
+    .bigLabel {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="topTitle">2D text demo (more labels)</div>
+  <div id="textInfo">Hello</div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+
+    const cubeWidth = 2;
+    const groundWidth = 10;
+    const groundThickness = groundWidth * 0.02;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    const labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    labelRenderer.domElement.style.position = "absolute";
+    labelRenderer.domElement.style.top = "0px";
+    document.body.appendChild(labelRenderer.domElement);
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, labelRenderer.domElement);
+
+    const axesHelper = new THREE.AxesHelper(groundWidth);
+    scene.add(axesHelper);
+
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 1);
+    scene.add(hemisphereLight);
+
+    const cubeGeometry = new THREE.BoxGeometry(cubeWidth, cubeWidth, cubeWidth);
+    const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xa080f0 });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.castShadow = true;
+    cube.position.set(0, cubeWidth * 1.5, 0);
+    scene.add(cube);
+
+    const groundGeometry = new THREE.BoxGeometry(groundWidth, groundThickness, groundWidth);
+    const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x40c020 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    scene.add(ground);
+
+    camera.position.set(0, groundWidth * 0.5, groundWidth * 1.5)
+
+    const cubeDiv = document.createElement("div");
+    cubeDiv.className = "label";
+    cubeDiv.textContent = "cube corner";
+    cubeDiv.style.backgroundColor = "transparent";
+
+    const cubeLabel = new CSS2DObject(cubeDiv);
+    cubeLabel.position.set(cubeWidth * 0.5, cubeWidth * 0.5, cubeWidth * 0.5);
+    cubeLabel.center.set(cubeWidth * 0.5, cubeWidth * 0.5, cubeWidth * 0.5);
+    cube.add(cubeLabel);
+
+    const groundCornersNames = ["A", "B", "C", "D"];
+    const groundCornersDivs = Array.from(
+      groundCornersNames,
+      (name, index) => {
+        const div = document.createElement("div");
+        div.className = "bigLabel";
+        div.textContent = name;
+        div.style.backgroundColor = "transparent";
+        return div;
+      });
+    const groundCornersLabels = Array.from(
+      groundCornersDivs,
+      (div) => {
+        const label = new CSS2DObject(div);
+        ground.add(label);
+        return label;
+      }
+    );
+    groundCornersLabels[0].position.set(groundWidth * 0.5, groundThickness * 0.5, groundWidth * 0.5);
+    groundCornersLabels[1].position.set(-groundWidth * 0.5, groundThickness * 0.5, groundWidth * 0.5);
+    groundCornersLabels[2].position.set(groundWidth * 0.5, groundThickness * 0.5, -groundWidth * 0.5);
+    groundCornersLabels[3].position.set(-groundWidth * 0.5, groundThickness * 0.5, -groundWidth * 0.5);
+
+
+    const textInfoDiv = document.getElementById("textInfo");
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.015;
+      cube.rotation.z += 0.0175;
+      ground.rotation.y -= 0.003;
+
+      renderer.render(scene, camera);
+      labelRenderer.render(scene, camera);
+
+      const p = camera.position;
+      const text = `Camera position:\nx: ${p.x}\ny: ${p.y}\nz: ${p.z}`;
+
+      const seconds = clock.getElapsedTime().toFixed(3);
+      textInfoDiv.innerText = `Running for ${seconds} sec\n\n${text}`;
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.addEventListener('resize', onWindowResize);
+    renderer.setAnimationLoop(animate);
+  </script>
+
+</body>
+
+</html>

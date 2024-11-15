@@ -24,6 +24,12 @@ vem.anims.push(visualCube);
 vem.camera.position.set(0, 2, 10)
 
 
+const folder = vem.gui.addFolder("Hello world");
+// folder.add(data, "width", 1, 5).onChange( () => {
+//     console.log(cube.children);
+// } );
+
+
 vem.renderer.setAnimationLoop(() => {
     vem.anims.forEach((anim) => {
         anim.animate();
