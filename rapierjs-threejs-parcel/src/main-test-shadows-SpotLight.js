@@ -61,29 +61,27 @@ function init() {
 
 function initGui() {
     const guiBoxPos = gui.addFolder("box position");
-    guiBoxPos.add(mshBox.position, "x", -5, 5, 0.1).onChange(x => mshBox.position.x = x);
-    guiBoxPos.add(mshBox.position, "y", 0, 5, 0.1).onChange(y => mshBox.position.y = y);
-    guiBoxPos.add(mshBox.position, "z", -5, 5, 0.1).onChange(z => mshBox.position.z = z);
-    guiBoxPos.close();
+    guiBoxPos.add(mshBox.position, "x", -5, 5, 0.1);
+    guiBoxPos.add(mshBox.position, "y", 0, 5, 0.1);
+    guiBoxPos.add(mshBox.position, "z", -5, 5, 0.1);
 
     const guiSpotLight = gui.addFolder("light");
     [
-        { prop: "angle", min: 0, max: Math.PI / 2, step: 0.01 },
-        { prop: "penumbra", min: 0, max: 1, step: 0.01 },
-        { prop: "decay", min: 0, max: 50, step: 0.5 },
-        { prop: "distance", min: 0, max: 50, step: 0.5 }
+        { property: "angle", min: 0, max: Math.PI / 2, step: 0.01 },
+        { property: "penumbra", min: 0, max: 1, step: 0.01 },
+        { property: "decay", min: 0, max: 50, step: 0.5 },
+        { property: "distance", min: 0, max: 50, step: 0.5 }
     ].forEach(
-        x => guiSpotLight.add(spotLight, x.prop, x.min, x.max, x.step)
-            .onChange(value => spotLight[`${x.prop}`] = value));
+        x => guiSpotLight.add(spotLight, x.property, x.min, x.max, x.step)
+    );
 
     [
-        ["x", 0, 50, 0.1],
-        ["y", 0, 50, 0.1],
-        ["z", 0, 50, 0.1]
+        { property: "x", min: 0, max: 50, step: 0.1 },
+        { property: "y", min: 0, max: 50, step: 0.1 },
+        { property: "z", min: 0, max: 50, step: 0.1 },
     ].forEach(
-        u => guiSpotLight.add(spotLight.position, `${u[0]}`, u[1], u[2], u[3])
-            .onChange(value => spotLight.position[`${u[0]}`] = value));
-    guiSpotLight.close();
+        x => guiSpotLight.add(spotLight.position, x.property, x.min, x.max, x.step)
+    );
 }
 
 function createSpotLight(color) {
