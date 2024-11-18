@@ -10,6 +10,8 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer();
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -26,12 +28,22 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-const axesHelper = new THREE.AxesHelper(10);
-scene.add(axesHelper);
-
 const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 1);
 
+const grid = new THREE.GridHelper(200, 10);
+scene.add(grid);
+
 const shuttle = new Shuttle();
+shuttle.mesh.position.y = 2.5;
+const axesHelperShuttle = new THREE.AxesHelper(3);
+shuttle.mesh.add(axesHelperShuttle);
+
+const geoGround = new THREE.PlaneGeometry(100, 100);
+const matGround = new THREE.MeshPhongMaterial({color: 0x0080c0});
+const ground = new THREE.Mesh(geoGround, matGround);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
 
 function init() {
     camera.position.set(1, 5, 5);
