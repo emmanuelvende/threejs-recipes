@@ -5,6 +5,7 @@ export class Shuttle {
     mesh;
     mat;
     spotLights;
+    target_object;
 
     constructor() {
         this.initMesh();
@@ -56,18 +57,24 @@ export class Shuttle {
     }
 
     initSpotlights() {
-        // this.spotLights = [];
-        const leftSpotLight = new THREE.SpotLight(0xffffff, 10);
+        this.spotLights = [];
+        const leftSpotLight = new THREE.SpotLight(0xffffff, 50);
 
         leftSpotLight.castShadow = true;
         leftSpotLight.angle = Math.PI / 4;
         leftSpotLight.penumbra = 0.2;
-        leftSpotLight.decay = 2;
-        leftSpotLight.distance = 20;
+        leftSpotLight.decay = 1;
+        leftSpotLight.distance = 0;
 
-        leftSpotLight.position.x = 1.5;
-        // leftSpotLight.rotation.z = - Math.PI;
+        leftSpotLight.position.copy(this.mesh.position);
+        this.target_object = new THREE.Object3D();
+        this.target_object.position.copy(this.mesh.position);
+        this.target_object.position.add(new THREE.Vector3(10, 0, 0));
+        leftSpotLight.target = this.target_object;
+        this.mesh.add(this.target_object, leftSpotLight);
+
+        this.spotLights.push(leftSpotLight);
         const leftSpotLightHelper = new THREE.SpotLightHelper(leftSpotLight);
-        this.mesh.add(leftSpotLight, leftSpotLightHelper);
+        this.mesh.add(leftSpotLightHelper);
     }
 }
